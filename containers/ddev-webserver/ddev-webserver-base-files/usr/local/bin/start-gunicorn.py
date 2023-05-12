@@ -14,8 +14,7 @@ bind_address = "0.0.0.0:8000"
 
 def convert_import_path(import_path):
     parts = import_path.split(".")
-    gunicorn_path = ".".join(parts[:-1]) + ":" + parts[-1]
-    return gunicorn_path
+    return ".".join(parts[:-1]) + ":" + parts[-1]
 
 def convert_settings_path(settings_file_path, project_root):
     if project_root not in sys.path:
@@ -32,15 +31,14 @@ def convert_settings_path(settings_file_path, project_root):
 def launch_gunicorn(wsgi_application, bind_address):
     command = f"gunicorn  -b {bind_address} -w 4 --reload --log-level debug --log-file - {wsgi_application}"
     print(command)
-    process = subprocess.Popen(command, shell=True)
-    return process
+    return subprocess.Popen(command, shell=True)
 
 
 # Make sure that current dir is in module path
 current_dir = os.getcwd()
-if str(current_dir) not in sys.path:
+if current_dir not in sys.path:
     # Add the current directory to sys.path
-    sys.path.insert(0, str(current_dir))
+    sys.path.insert(0, current_dir)
 
 print(f"sys.path={sys.path}")
 
